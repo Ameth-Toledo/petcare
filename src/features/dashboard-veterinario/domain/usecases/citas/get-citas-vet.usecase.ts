@@ -1,4 +1,4 @@
-import { CitaVet } from '../entities/cita.vet.entity'
+import { CitaVet } from '../../entities/cita.vet.entity'
 
 interface ICitasVetService {
   getCitas: () => Promise<CitaVet[]>

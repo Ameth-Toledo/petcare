@@ -1,4 +1,4 @@
-import { EstadoCitaVet } from '../entities/cita.vet.entity'
+import { EstadoCitaVet } from '../../entities/cita.vet.entity'
 
 interface ICitasVetService {
   updateStatus: (id: number, estado: EstadoCitaVet) => Promise<void>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { pacientesVetService } from '../../infrastructure/services/pacientes.vet.service'
 import { citasVetService } from '../../infrastructure/services/citas.vet.service'
-import { GetPacientesVetUseCase } from '../../domain/usecases/get-pacientes-vet.usecase'
+import { GetPacientesVetUseCase } from '../../domain/usecases/pacientes/get-pacientes-vet.usecase'
 import { PacienteVet } from '../../domain/entities/paciente.vet.entity'
 import { getUsuarioLocal } from '@/src/core/lib/auth/get-usuario-local'
 

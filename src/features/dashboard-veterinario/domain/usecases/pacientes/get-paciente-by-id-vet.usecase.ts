@@ -1,4 +1,4 @@
-import { PacienteVet } from '../entities/paciente.vet.entity'
+import { PacienteVet } from '../../entities/paciente.vet.entity'
 
 interface IPacientesVetService {
   getPacienteById: (id: number) => Promise<PacienteVet | null>
