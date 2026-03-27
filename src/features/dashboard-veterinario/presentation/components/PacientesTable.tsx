@@ -31,7 +31,7 @@ export const PacientesTable = ({ pacientes }: { pacientes: PacienteVetProps[] })
               <tr key={p.id} className={`hover:bg-gray-50 transition-colors ${i !== pacientes.length - 1 ? 'border-b border-gray-50' : ''}`}>
                 <td className="px-5 py-3 font-medium text-gray-900">{p.nombre}</td>
                 <td className="px-5 py-3 text-gray-500">{p.especie} · {p.raza ?? 'Sin raza'}</td>
-                <td className="px-5 py-3 text-gray-500">{p.nombre_dueno} {p.apellido_dueno}</td>
+                <td className="px-5 py-3 text-gray-500">{p.nombre_dueno ?? '-'} {p.apellido_dueno ?? ''}</td>
                 <td className="px-5 py-3">
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${p.activo ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                     {p.activo ? 'Activo' : 'Inactivo'}
