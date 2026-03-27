@@ -15,6 +15,7 @@ export const CardMascotaComponent = ({
   peso,
   activo,
 }: Mascota) => {
+  console.log('mascota id:', id)
   const edad = fecha_nacimiento
     ? Math.floor((Date.now() - new Date(fecha_nacimiento).getTime()) / (1000 * 60 * 60 * 24 * 365))
     : null

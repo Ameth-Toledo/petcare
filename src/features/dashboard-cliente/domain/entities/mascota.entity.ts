@@ -1,6 +1,6 @@
-// domain/entities/mascota.entity.ts
 export interface Mascota {
   id: number
+  id_mascota: number
   id_user: number
   nombre: string
   especie: string
