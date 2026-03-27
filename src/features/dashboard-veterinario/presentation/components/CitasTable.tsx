@@ -6,8 +6,8 @@ import { Routes } from '@/src/core/navigator/routes'
 const estadoStyles: Record<string, string> = {
   PENDIENTE:  'bg-yellow-100 text-yellow-700',
   CONFIRMADA: 'bg-green-100 text-green-700',
+  ATENDIDA:   'bg-blue-100 text-blue-700',
   CANCELADA:  'bg-red-100 text-red-700',
-  COMPLETADA: 'bg-blue-100 text-blue-700',
 }
 
 export const CitasTable = ({ citas }: { citas: CitaVetProps[] }) => {
@@ -36,13 +36,16 @@ export const CitasTable = ({ citas }: { citas: CitaVetProps[] }) => {
           </thead>
           <tbody>
             {citas.map((c, i) => (
-              <tr key={c.id} className={`hover:bg-gray-50 transition-colors ${i !== citas.length - 1 ? 'border-b border-gray-50' : ''}`}>
+              <tr
+                key={c.id}
+                className={`hover:bg-gray-50 transition-colors ${i !== citas.length - 1 ? 'border-b border-gray-50' : ''}`}
+              >
                 <td className="px-5 py-3 font-medium text-gray-900">{c.nombre_mascota}</td>
                 <td className="px-5 py-3 text-gray-500">{c.nombre_dueno} {c.apellido_dueno}</td>
                 <td className="px-5 py-3 text-gray-500">{c.hora}</td>
                 <td className="px-5 py-3 text-gray-500 truncate max-w-[100px]">{c.nombre_servicio}</td>
                 <td className="px-5 py-3">
-                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${estadoStyles[c.estado]}`}>
+                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${estadoStyles[c.estado] ?? ''}`}>
                     {c.estado}
                   </span>
                 </td>

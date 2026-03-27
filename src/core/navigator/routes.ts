@@ -26,6 +26,7 @@ export const Routes = {
       citas: '/dashboard/veterinario/citas',
       pacientes: '/dashboard/veterinario/pacientes',
       configuracion: '/dashboard/veterinario/configuracion',
+      agenda: '/dashboard/veterinario/agenda',
     }
   }
 }

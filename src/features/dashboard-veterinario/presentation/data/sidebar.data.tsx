@@ -18,8 +18,13 @@ export const linksVet = [
     icon: <PawPrint className="h-5 w-5 shrink-0 text-neutral-700" />,
   },
   {
+    label: 'Agenda',
+    href: Routes.dashboard.veterinario.agenda,
+    icon: <CalendarDays className="h-5 w-5 shrink-0 text-neutral-700" />,
+  },
+  {
     label: 'Configuración',
     href: Routes.dashboard.veterinario.configuracion,
     icon: <Settings className="h-5 w-5 shrink-0 text-neutral-700" />,
-  },
+  }
 ]
