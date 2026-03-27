@@ -2,8 +2,11 @@
 
 import { PawPrint, ArrowRight, Tag, Cake, Dna, Scale } from 'lucide-react'
 import { Mascota } from '../../domain/entities/mascota.entity'
+import Link from 'next/link'
+import { Routes } from '@/src/core/navigator/routes'
 
 export const CardMascotaComponent = ({
+  id,
   nombre,
   especie,
   raza,
@@ -56,10 +59,13 @@ export const CardMascotaComponent = ({
 
       </div>
 
-      <button className="flex items-center gap-1 bg-[#267A6E] hover:bg-[#1d6259] text-white text-xs font-semibold px-3 py-2 rounded-xl transition-colors cursor-pointer shrink-0">
+      <Link
+        href={Routes.dashboard.cliente.mascotaDetalle(id)}
+        className="flex items-center gap-1 bg-[#267A6E] hover:bg-[#1d6259] text-white text-xs font-semibold px-3 py-2 rounded-xl transition-colors cursor-pointer shrink-0"
+      >
         Ver
         <ArrowRight size={13} />
-      </button>
+      </Link>
 
     </div>
   )
