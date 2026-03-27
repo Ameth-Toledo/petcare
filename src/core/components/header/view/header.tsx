@@ -11,8 +11,7 @@ export const HeaderComponent = () => {
   const scrollTo = useScrollTo()
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] px-8 py-4 flex items-center justify-between">
-
+    <header className="sticky top-0 z-50 w-full bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] px-8 py-4 flex items-center justify-between">      
       <button onClick={() => scrollTo('hero')} className="flex items-center gap-2">
         <img src="/logo.webp" alt="PetCare" className="w-8 h-8" />
         <span className="text-xl font-bold">
@@ -41,7 +40,6 @@ export const HeaderComponent = () => {
         <LogIn size={16} />
         Iniciar Ahora
       </button>
-
     </header>
   )
 }

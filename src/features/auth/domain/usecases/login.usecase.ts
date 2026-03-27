@@ -1,13 +1,14 @@
-import { IUserRepository } from '../repositories/user.repository'
 import { LoginRequest } from '../dtos/request/login.request'
 import { AuthResponse } from '../dtos/response/auth.response'
 
+interface IAuthService {
+  login: (credentials: LoginRequest) => Promise<AuthResponse>
+}
+
 export class LoginUseCase {
-  constructor(private readonly userRepository: IUserRepository) {}
+  constructor(private readonly authService: IAuthService) {}
 
   async execute(credentials: LoginRequest): Promise<AuthResponse> {
-    const user = await this.userRepository.findByEmail(credentials.email)
-    if (!user) throw new Error('Credenciales inválidas')
-    return user as AuthResponse
+    return await this.authService.login(credentials)
   }
 }

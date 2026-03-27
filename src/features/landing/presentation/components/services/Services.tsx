@@ -2,7 +2,7 @@
 
 import { ServiceCard } from './ServiceCard'
 import { services } from '../../data/services.data'
-import { WordRotateConfetti } from './WordRotateConfetti'
+import { WordRotateConfetti } from '@/src/core/components/ui/WordRotateConfetti'
 
 export const ServicesComponent = () => {
   return (
