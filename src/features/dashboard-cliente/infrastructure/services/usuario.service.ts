@@ -9,8 +9,31 @@ export const usuarioService = {
   },
 
   updatePerfil: async (id: number, payload: UpdatePerfilRequest): Promise<Usuario> => {
-    const { data } = await httpClient.put<{ success: boolean; data: Usuario }>(`/clients/${id}`, payload)
-    return data.data
+    const userLocal = localStorage.getItem('user')
+    const user = userLocal ? JSON.parse(userLocal) : {}
+
+    const form = new FormData()
+    form.append('id', String(id))
+    form.append('rol', user.rol ?? 'USER')
+    form.append('nombre', payload.nombre)
+    form.append('apellido', payload.apellido)
+    form.append('telefono', payload.telefono)
+    if (payload.foto_perfil) {
+      form.append('foto_perfil', payload.foto_perfil)
+    }
+
+    const { data } = await httpClient.put('/auth/profile', form)
+
+    const updatedUser: Usuario = {
+      ...user,
+      nombre: payload.nombre,
+      apellido: payload.apellido,
+      telefono: payload.telefono,
+      avatar_url: data.data?.avatar_url ?? user.avatar_url,
+    }
+
+    localStorage.setItem('user', JSON.stringify(updatedUser))
+    return updatedUser
   },
 
   changePassword: async (passwordActual: string, nuevaPassword: string): Promise<void> => {

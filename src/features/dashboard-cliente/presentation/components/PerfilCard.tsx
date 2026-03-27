@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef } from 'react'
 import { User, Mail, Phone, Camera, Pencil, Check, X } from 'lucide-react'
 
 interface PerfilCardProps {
@@ -7,6 +8,7 @@ interface PerfilCardProps {
   apellido: string
   email: string
   telefono: string
+  avatar_url?: string
   editando: boolean
   onEditar: () => void
   onGuardar: () => void
@@ -14,26 +16,56 @@ interface PerfilCardProps {
   setNombre: (v: string) => void
   setApellido: (v: string) => void
   setTelefono: (v: string) => void
+  onAvatarChange: (file: File) => void
 }
 
 export const PerfilCard = ({
-  nombre, apellido, email, telefono,
+  nombre, apellido, email, telefono, avatar_url,
   editando, onEditar, onGuardar, onCancelar,
-  setNombre, setApellido, setTelefono,
+  setNombre, setApellido, setTelefono, onAvatarChange,
 }: PerfilCardProps) => {
   const iniciales = `${nombre?.[0] ?? ''}${apellido?.[0] ?? ''}`.toUpperCase()
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleAvatarClick = () => {
+    if (editando) inputRef.current?.click()
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) onAvatarChange(file)
+  }
 
   return (
     <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-5 shadow-sm">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
           <div className="relative">
-            <div className="w-14 h-14 rounded-full bg-[#267A6E]/10 flex items-center justify-center text-[#267A6E] font-bold text-lg select-none">
-              {iniciales}
-            </div>
-            <button className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#267A6E] rounded-full flex items-center justify-center text-white hover:bg-[#1d6259] transition-colors cursor-pointer">
+            {avatar_url ? (
+              <img
+                src={avatar_url}
+                alt="Avatar"
+                className="w-14 h-14 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-[#267A6E]/10 flex items-center justify-center text-[#267A6E] font-bold text-lg select-none">
+                {iniciales}
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={handleAvatarClick}
+              className={`absolute -bottom-1 -right-1 w-5 h-5 bg-[#267A6E] rounded-full flex items-center justify-center text-white hover:bg-[#1d6259] transition-colors ${editando ? 'cursor-pointer' : 'cursor-default opacity-50'}`}
+            >
               <Camera size={10} />
             </button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
           </div>
           <div>
             <p className="text-gray-900 font-semibold text-base leading-tight">{nombre} {apellido}</p>

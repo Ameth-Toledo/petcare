@@ -15,6 +15,7 @@ export const ConfiguracionScreen = () => {
     nombre, setNombre,
     apellido, setApellido,
     telefono, setTelefono,
+    setFotoPerfil,
     handleGuardarPerfil, handleCancelarPerfil,
     abierto, setAbierto,
     actual, setActual,
@@ -24,8 +25,8 @@ export const ConfiguracionScreen = () => {
     handleGuardarPassword,
   } = useConfiguracionViewModel()
 
-  const [showActual, setShowActual]     = useState(false)
-  const [showNueva, setShowNueva]       = useState(false)
+  const [showActual, setShowActual]       = useState(false)
+  const [showNueva, setShowNueva]         = useState(false)
   const [showConfirmar, setShowConfirmar] = useState(false)
 
   if (isLoading) {
@@ -58,6 +59,7 @@ export const ConfiguracionScreen = () => {
           apellido={apellido}
           email={usuario.email}
           telefono={telefono}
+          avatar_url={usuario.avatar_url}
           editando={editando}
           onEditar={() => setEditando(true)}
           onGuardar={handleGuardarPerfil}
@@ -65,6 +67,7 @@ export const ConfiguracionScreen = () => {
           setNombre={setNombre}
           setApellido={setApellido}
           setTelefono={setTelefono}
+          onAvatarChange={setFotoPerfil}
         />
 
         <div className="flex flex-col gap-1">

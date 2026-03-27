@@ -14,19 +14,20 @@ const USUARIO_VACIO: Usuario = {
 }
 
 export const useConfiguracionViewModel = () => {
-  const [usuario, setUsuario]   = useState<Usuario>(USUARIO_VACIO)
+  const [usuario, setUsuario]     = useState<Usuario>(USUARIO_VACIO)
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError]       = useState<string | null>(null)
+  const [error, setError]         = useState<string | null>(null)
 
-  const [nombre, setNombre]     = useState('')
-  const [apellido, setApellido] = useState('')
-  const [telefono, setTelefono] = useState('')
-  const [editando, setEditando] = useState(false)
+  const [nombre, setNombre]       = useState('')
+  const [apellido, setApellido]   = useState('')
+  const [telefono, setTelefono]   = useState('')
+  const [editando, setEditando]   = useState(false)
+  const [fotoPerfil, setFotoPerfil] = useState<File | undefined>(undefined)
 
-  const [abierto, setAbierto]       = useState(false)
-  const [actual, setActual]         = useState('')
-  const [nueva, setNueva]           = useState('')
-  const [confirmar, setConfirmar]   = useState('')
+  const [abierto, setAbierto]     = useState(false)
+  const [actual, setActual]       = useState('')
+  const [nueva, setNueva]         = useState('')
+  const [confirmar, setConfirmar] = useState('')
   const [passwordLoading, setPasswordLoading] = useState(false)
   const [passwordError, setPasswordError]     = useState<string | null>(null)
   const [passwordOk, setPasswordOk]           = useState(false)
@@ -42,11 +43,8 @@ export const useConfiguracionViewModel = () => {
     const fetchUsuario = async () => {
       try {
         setIsLoading(true)
-
         const userLocal = localStorage.getItem('user')
-        if (userLocal) {
-          aplicarUsuario(JSON.parse(userLocal) as Usuario)
-        }
+        if (userLocal) aplicarUsuario(JSON.parse(userLocal) as Usuario)
 
         try {
           const data = await getUsuarioUseCase.execute()
@@ -55,24 +53,32 @@ export const useConfiguracionViewModel = () => {
         } catch (apiError) {
           if (!userLocal) throw apiError
         }
-
       } catch (e: any) {
         setError(e.message)
       } finally {
         setIsLoading(false)
       }
     }
-
     fetchUsuario()
   }, [])
 
   const handleGuardarPerfil = async () => {
     try {
-      const updated = await updatePerfilUseCase.execute(usuario.id, { nombre, apellido, telefono })
+      console.log('usuario.id:', usuario.id)
+      console.log('payload:', { nombre, apellido, telefono, foto_perfil: fotoPerfil })
+      console.log('llamando execute...')
+      const updated = await updatePerfilUseCase.execute(usuario.id, {
+        nombre, apellido, telefono,
+        foto_perfil: fotoPerfil,
+      })
+      console.log('updated:', updated)
       aplicarUsuario(updated)
       localStorage.setItem('user', JSON.stringify(updated))
       setEditando(false)
+      setFotoPerfil(undefined)
     } catch (e: any) {
+      console.error('ERROR COMPLETO:', e)
+      console.error('ERROR RESPONSE:', e.response?.data)
       setError(e.message)
     }
   }
@@ -81,6 +87,7 @@ export const useConfiguracionViewModel = () => {
     setNombre(usuario.nombre)
     setApellido(usuario.apellido)
     setTelefono(usuario.telefono)
+    setFotoPerfil(undefined)
     setEditando(false)
   }
 
@@ -105,13 +112,8 @@ export const useConfiguracionViewModel = () => {
       setPasswordLoading(true)
       await usuarioService.changePassword(actual, nueva)
       setPasswordOk(true)
-      setActual('')
-      setNueva('')
-      setConfirmar('')
-      setTimeout(() => {
-        setPasswordOk(false)
-        setAbierto(false)
-      }, 2000)
+      setActual(''); setNueva(''); setConfirmar('')
+      setTimeout(() => { setPasswordOk(false); setAbierto(false) }, 2000)
     } catch (e: any) {
       setPasswordError(e.response?.data?.message ?? e.message ?? 'Error al cambiar la contraseña.')
     } finally {
@@ -126,6 +128,7 @@ export const useConfiguracionViewModel = () => {
     nombre, setNombre,
     apellido, setApellido,
     telefono, setTelefono,
+    fotoPerfil, setFotoPerfil,
     handleGuardarPerfil, handleCancelarPerfil,
     abierto, setAbierto,
     actual, setActual,
