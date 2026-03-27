@@ -14,7 +14,12 @@ export const Routes = {
     },
     admin: {
       overview: '/dashboard/admin',
-      usuarios: '/dashboard/admin/usuarios',
+      clientes: '/dashboard/admin/clientes',
+      citas: '/dashboard/admin/citas',
+      pacientes: '/dashboard/admin/pacientes',
+      personal: '/dashboard/admin/personal',
+      analisis: '/dashboard/admin/analisis',
+      configuracion: '/dashboard/admin/configuracion',
     },
     veterinario: {
       overview: '/dashboard/veterinario',
