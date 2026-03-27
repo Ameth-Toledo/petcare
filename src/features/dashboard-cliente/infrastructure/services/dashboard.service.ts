@@ -1,6 +1,8 @@
 import { httpClient } from '@/src/core/lib/http/http-client'
 import { Cita } from '../../domain/entities/cita.entity'
 import { Mascota } from '../../domain/entities/mascota.entity'
+import { CreateMascotaRequest } from '../../domain/dtos/request/create-mascota.request'
+import { CreateCitaRequest } from '../../domain/dtos/request/create-cita.request'
 
 export const dashboardClienteService = {
   getCitasRecientes: async (): Promise<Cita[]> => {
@@ -11,5 +13,15 @@ export const dashboardClienteService = {
   getMascotasRecientes: async (): Promise<Mascota[]> => {
     const { data } = await httpClient.get('/pets/detalle')
     return Array.isArray(data) ? data : data.data ?? []
+  },
+
+  createMascota: async (payload: CreateMascotaRequest): Promise<Mascota> => {
+    const { data } = await httpClient.post<{ success: boolean; data: Mascota }>('/pets', payload)
+    return data.data
+  },
+
+  createCita: async (payload: CreateCitaRequest): Promise<Cita> => {
+    const { data } = await httpClient.post<{ success: boolean; data: Cita }>('/citas', payload)
+    return data.data
   },
 }

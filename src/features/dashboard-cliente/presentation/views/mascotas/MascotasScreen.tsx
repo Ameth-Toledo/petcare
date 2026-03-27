@@ -110,7 +110,7 @@ export const MascotasScreen = () => {
             <img
               src="/resources/overview-user.webp"
               alt="Overview"
-              style={{ width: '63rem' }}
+              style={{ width: '24rem' }}
               className="absolute bottom-0 left-1/2 -translate-x-1/2 object-contain"
             />
           </div>
