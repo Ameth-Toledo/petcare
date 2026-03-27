@@ -3,8 +3,9 @@ export interface CardPetOverViewProps {
   nombre: string
   especie: string
   raza: string | null
-  fecha_nacimiento: string | null
-  sexo: string | null
-  peso: number | null
+  edad: number | null
+  nombre_dueno: string
+  apellido_dueno: string
+  fecha_registro: string | null
   activo: boolean
 }

@@ -9,11 +9,12 @@ import { CardPetOverViewProps } from "../../types/pet.overview.types"
 import { WordRotateConfetti } from "@/src/core/components/ui/WordRotateConfetti"
 import { useOverviewViewModel } from '../../viewmodels/overview.viewmodel'
 import { LoaderOne } from "@/src/core/components/ui/loader"
+import { mascotaToCardProps } from '@/src/core/mappers/mascota.mapper'
 
 export const OverviewScreen = () => {
   const { citas, mascotas, isLoading, error } = useOverviewViewModel()
   const recentAppointments: CardOverViewProps[] = citas
-  const recentPets: CardPetOverViewProps[] = mascotas
+  const recentPets: CardPetOverViewProps[] = mascotas.map(mascotaToCardProps)
 
   if (isLoading) {
     return (
