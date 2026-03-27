@@ -11,6 +11,7 @@ export const Routes = {
       citas: '/dashboard/cliente/citas',
       mascotas: '/dashboard/cliente/mascotas',
       configuracion: '/dashboard/cliente/configuracion',
+      mascotaDetalle: (id: number) => `/dashboard/cliente/mascotas/${id}`,
     },
     admin: {
       overview: '/dashboard/admin',

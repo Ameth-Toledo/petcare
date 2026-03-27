@@ -21,7 +21,7 @@ export const useMascotaDetalleViewModel = (mascotaId: number) => {
           dashboardClienteService.getMascotasRecientes(),
           getHistorialUseCase.execute(mascotaId),
         ])
-        const found = mascotas.find(m => m.id === mascotaId) ?? null
+        const found = mascotas.find(m => m.id === mascotaId || m.id_mascota === mascotaId) ?? null
         setMascota(found)
         setHistorial(historialData)
       } catch (e: any) {

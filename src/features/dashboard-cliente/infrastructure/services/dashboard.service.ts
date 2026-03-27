@@ -12,9 +12,10 @@ export const dashboardClienteService = {
 
   getMascotasRecientes: async (): Promise<Mascota[]> => {
     const { data } = await httpClient.get('/pets/detalle')
-    return Array.isArray(data) ? data : data.data ?? []
+    const lista = Array.isArray(data) ? data : data.data ?? []
+    return lista.map((m: any) => ({ ...m, id: m.id_mascota ?? m.id }))
   },
-
+  
   createMascota: async (payload: CreateMascotaRequest): Promise<Mascota> => {
     const { data } = await httpClient.post<{ success: boolean; data: Mascota }>('/pets', payload)
     return data.data
