@@ -1,16 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, CalendarDays } from 'lucide-react'
 import { Mascota } from '../../domain/entities/mascota.entity'
+import { Veterinario } from '../../domain/entities/veterinario.entity'
+import { Agenda } from '../../domain/entities/agenda.entity'
 import { useCrearCitaViewModel } from '../viewmodels/crear-cita.viewmodel'
+import { veterinarioService } from '../../infrastructure/services/veterinario.service'
+import { GetVeterinariosUseCase } from '../../domain/usecases/get-veterinarios.usecase'
+import { GetAgendaUseCase } from '../../domain/usecases/get-agenda.usecase'
 
-interface ModalAgendarCitaProps {
-  isOpen: boolean
-  onClose: () => void
-  onSuccess: () => void
-  mascotas: Mascota[]
-}
+const getVeterinariosUseCase = new GetVeterinariosUseCase(veterinarioService)
+const getAgendaUseCase = new GetAgendaUseCase(veterinarioService)
 
 const SERVICIOS = [
   { id: 1, nombre: 'Consulta general', precio: '250.00' },
@@ -20,29 +21,75 @@ const SERVICIOS = [
   { id: 5, nombre: 'Cirugía menor', precio: '800.00' },
 ]
 
+interface ModalAgendarCitaProps {
+  isOpen: boolean
+  onClose: () => void
+  onSuccess: () => void
+  mascotas: Mascota[]
+}
+
 export const ModalAgendarCita = ({ isOpen, onClose, onSuccess, mascotas }: ModalAgendarCitaProps) => {
-  const [idMascota, setIdMascota] = useState('')
-  const [idServicio, setIdServicio] = useState('')
-  const [fecha, setFecha] = useState('')
+  const [idMascota, setIdMascota]       = useState('')
+  const [idServicio, setIdServicio]     = useState('')
+  const [idVeterinario, setIdVeterinario] = useState('')
+  const [idAgenda, setIdAgenda]         = useState('')
   const [observaciones, setObservaciones] = useState('')
 
+  const [veterinarios, setVeterinarios] = useState<Veterinario[]>([])
+  const [agenda, setAgenda]             = useState<Agenda[]>([])
+  const [loadingVets, setLoadingVets]   = useState(false)
+  const [loadingAgenda, setLoadingAgenda] = useState(false)
+
   const { crearCita, isLoading, error } = useCrearCitaViewModel(onSuccess)
+
+  useEffect(() => {
+    if (!isOpen) return
+    const fetchVets = async () => {
+      try {
+        setLoadingVets(true)
+        const data = await getVeterinariosUseCase.execute()
+        setVeterinarios(data)
+      } finally {
+        setLoadingVets(false)
+      }
+    }
+    fetchVets()
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!idVeterinario) { setAgenda([]); return }
+    const fetchAgenda = async () => {
+      try {
+        setLoadingAgenda(true)
+        setIdAgenda('')
+        const data = await getAgendaUseCase.execute(Number(idVeterinario))
+        setAgenda(data)
+      } finally {
+        setLoadingAgenda(false)
+      }
+    }
+    fetchAgenda()
+  }, [idVeterinario])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const user = JSON.parse(localStorage.getItem('user') ?? '{}')
+    const agendaSeleccionada = agenda.find(a => a.id === Number(idAgenda))
     await crearCita({
       id_user: user.id,
       id_mascota: parseInt(idMascota),
       id_servicio: parseInt(idServicio),
-      fecha,
+      id_veterinario: parseInt(idVeterinario),
+      id_agenda: parseInt(idAgenda),
+      fecha: agendaSeleccionada?.fecha ?? '',
       observaciones_cliente: observaciones || undefined,
     })
     handleClose()
   }
 
   const handleClose = () => {
-    setIdMascota(''); setIdServicio(''); setFecha(''); setObservaciones('')
+    setIdMascota(''); setIdServicio(''); setIdVeterinario('')
+    setIdAgenda(''); setObservaciones(''); setAgenda([])
     onClose()
   }
 
@@ -97,15 +144,39 @@ export const ModalAgendarCita = ({ isOpen, onClose, onSuccess, mascotas }: Modal
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-gray-700">Fecha y hora</label>
-            <input
-              type="datetime-local"
-              value={fecha}
-              onChange={e => setFecha(e.target.value)}
+            <label className="text-sm font-medium text-gray-700">Veterinario</label>
+            <select
+              value={idVeterinario}
+              onChange={e => setIdVeterinario(e.target.value)}
               required
-              min={new Date().toISOString().slice(0, 16)}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all bg-white"
-            />
+              disabled={loadingVets}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all bg-white cursor-pointer disabled:opacity-60"
+            >
+              <option value="">{loadingVets ? 'Cargando...' : 'Selecciona un veterinario'}</option>
+              {veterinarios.map(v => (
+                <option key={v.id} value={v.id}>{v.nombre} {v.apellido} {v.especialidad ? `· ${v.especialidad}` : ''}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-gray-700">Horario disponible</label>
+            <select
+              value={idAgenda}
+              onChange={e => setIdAgenda(e.target.value)}
+              required
+              disabled={!idVeterinario || loadingAgenda}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all bg-white cursor-pointer disabled:opacity-60"
+            >
+              <option value="">
+                {!idVeterinario ? 'Selecciona un veterinario primero' : loadingAgenda ? 'Cargando horarios...' : agenda.length === 0 ? 'Sin horarios disponibles' : 'Selecciona un horario'}
+              </option>
+              {agenda.map(a => (
+                <option key={a.id} value={a.id}>
+                  {a.dia_nombre} {new Date(a.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })} · {a.hora_inicio} - {a.hora_fin}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex flex-col gap-1.5">

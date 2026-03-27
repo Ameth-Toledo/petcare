@@ -27,9 +27,9 @@ export const CitasScreen = () => {
   const citasFiltradas = citas
     .filter(c => filtro === 'TODAS' || c.estado === filtro)
     .filter(c =>
-      c.nombre_mascota.toLowerCase().includes(busqueda.toLowerCase()) ||
-      c.nombre_dueno.toLowerCase().includes(busqueda.toLowerCase()) ||
-      c.nombre_servicio.toLowerCase().includes(busqueda.toLowerCase())
+      (c.nombre_mascota ?? '').toLowerCase().includes(busqueda.toLowerCase()) ||
+      (c.nombre_dueno ?? '').toLowerCase().includes(busqueda.toLowerCase()) ||
+      (c.nombre_servicio ?? '').toLowerCase().includes(busqueda.toLowerCase())
     )
 
   if (isLoading) {
