@@ -18,6 +18,9 @@ export const Routes = {
     },
     veterinario: {
       overview: '/dashboard/veterinario',
+      citas: '/dashboard/veterinario/citas',
+      pacientes: '/dashboard/veterinario/pacientes',
+      configuracion: '/dashboard/veterinario/configuracion',
     }
   }
 }
