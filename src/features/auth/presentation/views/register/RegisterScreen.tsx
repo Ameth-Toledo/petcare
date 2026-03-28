@@ -2,13 +2,14 @@
 
 import { HeaderComponent } from '@/src/core/components/header/view/header'
 import { useRegisterViewModel } from '../../viewmodels/register.viewmodel'
+import { Alert } from '@/src/core/components/ui/Alert'
 import { Routes } from '@/src/core/navigator/routes'
 import { Eye, EyeOff, UserPlus } from 'lucide-react'
 import { useState } from 'react'
 import Link from 'next/link'
 
 export const RegisterScreen = () => {
-  const { register, isLoading, error } = useRegisterViewModel()
+  const { register, isLoading, alert: alertState, hideAlert } = useRegisterViewModel()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [nombre, setNombre] = useState('')
@@ -30,6 +31,8 @@ export const RegisterScreen = () => {
     <div className="min-h-screen flex flex-col">
       <HeaderComponent />
 
+      <Alert alert={alertState} onClose={hideAlert} />
+
       <div className="flex flex-1">
 
         <div className="hidden md:flex flex-1 items-end justify-start">
@@ -47,10 +50,10 @@ export const RegisterScreen = () => {
             <p className="text-sm text-gray-400 mb-8">Regístrate para comenzar</p>
 
             <button
-                type="button"
-                onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`}
-                className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors mb-6"
-              >
+              type="button"
+              onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`}
+              className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors mb-6"
+            >
               <svg width="18" height="18" viewBox="0 0 18 18">
                 <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
                 <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
@@ -71,73 +74,34 @@ export const RegisterScreen = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-gray-700">Nombre</label>
-                  <input
-                    name="nombre"
-                    type="text"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    placeholder="Juan"
-                    required
-                    className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all"
-                  />
+                  <input name="nombre" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Juan" required
+                    className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all" />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-gray-700">Apellido</label>
-                  <input
-                    name="apellido"
-                    type="text"
-                    value={apellido}
-                    onChange={(e) => setApellido(e.target.value)}
-                    placeholder="Pérez"
-                    required
-                    className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all"
-                  />
+                  <input name="apellido" type="text" value={apellido} onChange={(e) => setApellido(e.target.value)} placeholder="Pérez" required
+                    className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all" />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-gray-700">Correo electrónico</label>
-                <input
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="tu@email.com"
-                  required
-                  className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all"
-                />
+                <input name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" required
+                  className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all" />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-gray-700">Teléfono</label>
-                <input
-                  name="telefono"
-                  type="tel"
-                  value={telefono}
-                  onChange={(e) => setTelefono(e.target.value)}
-                  placeholder="+52 961 000 0000"
-                  required
-                  className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all"
-                />
+                <input name="telefono" type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} placeholder="+52 961 000 0000" required
+                  className="border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all" />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-gray-700">Contraseña</label>
                 <div className="relative">
-                  <input
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all pr-11"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
+                  <input name="password" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all pr-11" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
@@ -146,34 +110,16 @@ export const RegisterScreen = () => {
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-gray-700">Confirmar contraseña</label>
                 <div className="relative">
-                  <input
-                    name="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all pr-11"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
+                  <input name="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••••••" required
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#267A6E] focus:ring-2 focus:ring-[#267A6E]/10 transition-all pr-11" />
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
                     {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
 
-              {error && (
-                <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
-              )}
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="bg-[#267A6E] hover:bg-[#1d6259] disabled:opacity-60 text-white text-sm font-semibold py-3 rounded-xl transition-colors mt-2 cursor-pointer flex items-center justify-center gap-2"
-              >
+              <button type="submit" disabled={isLoading}
+                className="bg-[#267A6E] hover:bg-[#1d6259] disabled:opacity-60 text-white text-sm font-semibold py-3 rounded-xl transition-colors mt-2 cursor-pointer flex items-center justify-center gap-2">
                 <UserPlus size={16} />
                 {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
               </button>
