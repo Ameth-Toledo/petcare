@@ -6,15 +6,19 @@ export const mascotaToCardProps = (mascota: Mascota): CardPetOverViewProps => {
     ? Math.floor((Date.now() - new Date(mascota.fecha_nacimiento).getTime()) / (1000 * 60 * 60 * 24 * 365))
     : null
 
+  const user = typeof window !== 'undefined'
+    ? JSON.parse(localStorage.getItem('user') ?? '{}')
+    : {}
+
   return {
     id: mascota.id,
     nombre: mascota.nombre,
     especie: mascota.especie,
-    raza: mascota.raza,
+    raza: mascota.raza ?? 'Sin raza',
     edad,
-    nombre_dueno: '',
-    apellido_dueno: '',
-    fecha_registro: mascota.fecha_nacimiento,
+    nombre_dueno: user.nombre ?? '',
+    apellido_dueno: user.apellido ?? '',
+    fecha_registro: (mascota as any).fecha_registro ?? mascota.fecha_nacimiento,
     activo: mascota.activo,
   }
 }
