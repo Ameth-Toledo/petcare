@@ -5,6 +5,8 @@ import { usuarioService } from '@/src/features/dashboard-cliente/infrastructure/
 import { GetUsuarioUseCase } from '@/src/features/dashboard-cliente/domain/usecases/get-usuario.usecase'
 import { UpdatePerfilUseCase } from '@/src/features/dashboard-cliente/domain/usecases/update-perfil.usecase'
 import { Usuario } from '@/src/features/dashboard-cliente/domain/entities/usuario.entity'
+import { useAlert } from '@/src/core/hooks/useAlert'
+import { getErrorMessage } from '@/src/core/lib/error-messages'
 
 const getUsuarioUseCase = new GetUsuarioUseCase(usuarioService)
 const updatePerfilUseCase = new UpdatePerfilUseCase(usuarioService)
@@ -32,6 +34,8 @@ export const useConfiguracionViewModelVet = () => {
   const [passwordError, setPasswordError]     = useState<string | null>(null)
   const [passwordOk, setPasswordOk]           = useState(false)
 
+  const { alert, hideAlert, success, error: showError } = useAlert()
+
   const aplicarUsuario = (u: Usuario) => {
     setUsuario(u)
     setNombre(u.nombre ?? '')
@@ -54,7 +58,7 @@ export const useConfiguracionViewModelVet = () => {
           if (!userLocal) throw apiError
         }
       } catch (e: any) {
-        setError(e.message)
+        setError(getErrorMessage(e))
       } finally {
         setIsLoading(false)
       }
@@ -64,22 +68,17 @@ export const useConfiguracionViewModelVet = () => {
 
   const handleGuardarPerfil = async () => {
     try {
-      console.log('usuario.id:', usuario.id)
-      console.log('payload:', { nombre, apellido, telefono, foto_perfil: fotoPerfil })
-      console.log('llamando execute...')
       const updated = await updatePerfilUseCase.execute(usuario.id, {
         nombre, apellido, telefono,
         foto_perfil: fotoPerfil,
       })
-      console.log('updated:', updated)
       aplicarUsuario(updated)
       localStorage.setItem('user', JSON.stringify(updated))
       setEditando(false)
       setFotoPerfil(undefined)
+      success('¡Perfil actualizado!', 'Tus datos fueron guardados correctamente.')
     } catch (e: any) {
-      console.error('ERROR COMPLETO:', e)
-      console.error('ERROR RESPONSE:', e.response?.data)
-      setError(e.message)
+      showError('Error al guardar', getErrorMessage(e))
     }
   }
 
@@ -113,9 +112,10 @@ export const useConfiguracionViewModelVet = () => {
       await usuarioService.changePassword(actual, nueva)
       setPasswordOk(true)
       setActual(''); setNueva(''); setConfirmar('')
+      success('¡Contraseña actualizada!', 'Tu contraseña fue cambiada correctamente.')
       setTimeout(() => { setPasswordOk(false); setAbierto(false) }, 2000)
     } catch (e: any) {
-      setPasswordError(e.response?.data?.message ?? e.message ?? 'Error al cambiar la contraseña.')
+      setPasswordError(getErrorMessage(e))
     } finally {
       setPasswordLoading(false)
     }
@@ -136,5 +136,6 @@ export const useConfiguracionViewModelVet = () => {
     confirmar, setConfirmar,
     passwordLoading, passwordError, passwordOk,
     handleGuardarPassword,
+    alert, hideAlert,
   }
 }

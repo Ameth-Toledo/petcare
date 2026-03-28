@@ -8,7 +8,6 @@ import { LoaderOne } from "@/src/core/components/ui/loader"
 import { EstadoCitaVet } from "../../types/cita.vet.types"
 import { WordRotateConfetti } from "@/src/core/components/ui/WordRotateConfetti"
 import { CreateCitaVetRequest } from "../../../domain/dtos/request/create-cita-vet.request"
-import { CitasTable } from "../../components/CitasTable"
 
 const estadoOpciones = ['TODAS', 'PENDIENTE', 'CONFIRMADA', 'ATENDIDA', 'CANCELADA'] as const
 
@@ -84,7 +83,6 @@ export const CitasVetScreen = () => {
 
             <div className="flex flex-col flex-1 px-6 py-8 gap-6 overflow-hidden">
 
-                {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
@@ -95,18 +93,8 @@ export const CitasVetScreen = () => {
                             {citasFiltradas.length} resultado{citasFiltradas.length !== 1 ? 's' : ''}
                         </span>
                     </div>
-                    {/*}
-          <button
-            onClick={() => setModalCrear(true)}
-            className="flex items-center gap-2 bg-[#267A6E] hover:bg-[#1d6259] text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors cursor-pointer"
-          >
-            <Plus size={16} />
-            Nueva cita
-          </button>
-          */}
                 </div>
 
-                {/* Filtros */}
                 <div className="flex items-center gap-4">
                     <div className="relative flex-1 max-w-sm">
                         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -123,8 +111,7 @@ export const CitasVetScreen = () => {
                             <button
                                 key={op}
                                 onClick={() => setFiltro(op)}
-                                className={`text-xs font-semibold px-4 py-2 rounded-full transition-colors cursor-pointer ${filtro === op ? estadoStyles[op] : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
-                                    }`}
+                                className={`text-xs font-semibold px-4 py-2 rounded-full transition-colors cursor-pointer ${filtro === op ? estadoStyles[op] : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
                             >
                                 {op}
                             </button>
@@ -132,10 +119,7 @@ export const CitasVetScreen = () => {
                     </div>
                 </div>
 
-                {/* Tabla o estado vacío */}
                 {citasFiltradas.length > 0 ? (
-                    // CitasTable ya tiene scroll interno, le pasamos también los handlers
-                    // para cambiar estado y eliminar directamente desde la tabla completa
                     <div className="flex flex-col flex-1 overflow-hidden">
                         <CitasTableFull
                             citas={citasFiltradas}
@@ -169,86 +153,40 @@ export const CitasVetScreen = () => {
                 )}
             </div>
 
-            {/* Modal Crear Cita */}
-            {modalCrear && (
-                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6 flex flex-col gap-5">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <CalendarDays size={16} className="text-[#267A6E]" />
-                                <h3 className="text-sm font-bold text-gray-900">Nueva cita</h3>
-                            </div>
-                            <button onClick={cerrarModal} className="text-gray-400 hover:text-gray-600 cursor-pointer">
-                                <X size={16} />
-                            </button>
-                        </div>
-
-                        <div className="flex flex-col gap-3">
-                            <FormField label="ID Usuario" type="number"
-                                value={form.id_user === 0 ? '' : String(form.id_user)}
-                                onChange={v => setForm(f => ({ ...f, id_user: Number(v) }))}
-                            />
-                            <FormField label="ID Mascota" type="number"
-                                value={form.id_mascota === 0 ? '' : String(form.id_mascota)}
-                                onChange={v => setForm(f => ({ ...f, id_mascota: Number(v) }))}
-                            />
-                            <FormField label="ID Servicio" type="number"
-                                value={form.id_servicio === 0 ? '' : String(form.id_servicio)}
-                                onChange={v => setForm(f => ({ ...f, id_servicio: Number(v) }))}
-                            />
-                            <FormField label="Fecha y hora" type="datetime-local"
-                                value={form.fecha}
-                                onChange={v => setForm(f => ({ ...f, fecha: v }))}
-                            />
-                            <div className="flex flex-col gap-1">
-                                <label className="text-xs text-gray-400 font-medium">Observaciones (opcional)</label>
-                                <textarea
-                                    rows={3}
-                                    value={form.observaciones_cliente ?? ''}
-                                    onChange={e => setForm(f => ({ ...f, observaciones_cliente: e.target.value }))}
-                                    className="w-full text-sm text-gray-900 border border-gray-200 rounded-xl px-3 py-2 outline-none focus:border-[#267A6E] transition-colors resize-none"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="flex justify-end gap-2 pt-1">
-                            <button onClick={cerrarModal}
-                                className="text-xs font-semibold text-gray-500 border border-gray-200 px-4 py-2 rounded-full hover:bg-gray-50 transition-colors cursor-pointer"
-                            >
-                                Cancelar
-                            </button>
-                            <button onClick={handleSubmitCrear} disabled={creating}
-                                className="flex items-center gap-1.5 text-xs font-semibold text-white bg-[#267A6E] hover:bg-[#1d6259] disabled:opacity-60 px-4 py-2 rounded-full transition-colors cursor-pointer"
-                            >
-                                {creating
-                                    ? <><Loader2 size={11} className="animate-spin" /> Creando...</>
-                                    : <><Plus size={11} /> Crear cita</>
-                                }
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Modal Confirmar Eliminación */}
             {confirmDelete !== null && (
-                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6 flex flex-col gap-4">
-                        <h3 className="text-sm font-bold text-gray-900">¿Eliminar cita?</h3>
-                        <p className="text-sm text-gray-500">Esta acción no se puede deshacer.</p>
-                        <div className="flex justify-end gap-2">
-                            <button onClick={() => setConfirmDelete(null)}
-                                className="text-xs font-semibold text-gray-500 border border-gray-200 px-4 py-2 rounded-full hover:bg-gray-50 transition-colors cursor-pointer"
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={async () => { await handleDeleteCita(confirmDelete); setConfirmDelete(null) }}
-                                className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full transition-colors cursor-pointer"
-                            >
-                                Eliminar
+                <div className="fixed inset-0 z-50 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setConfirmDelete(null)} />
+                    <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 z-10">
+
+                        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+                            <div className="flex items-center gap-2">
+                                <Trash2 size={18} className="text-red-500" />
+                                <h2 className="text-base font-bold text-gray-900">¿Eliminar cita?</h2>
+                            </div>
+                            <button onClick={() => setConfirmDelete(null)} className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer">
+                                <X size={18} />
                             </button>
                         </div>
+
+                        <div className="px-6 py-5 flex flex-col gap-4">
+                            <p className="text-sm text-gray-500">Esta acción no se puede deshacer. La cita será eliminada permanentemente.</p>
+
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => setConfirmDelete(null)}
+                                    className="flex-1 text-sm font-semibold text-gray-500 border border-gray-200 py-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={async () => { await handleDeleteCita(confirmDelete); setConfirmDelete(null) }}
+                                    className="flex-1 text-sm font-semibold text-white bg-red-500 hover:bg-red-600 py-3 rounded-xl transition-colors cursor-pointer"
+                                >
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             )}
