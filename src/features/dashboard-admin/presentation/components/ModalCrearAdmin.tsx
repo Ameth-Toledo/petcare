@@ -18,7 +18,8 @@ export const ModalCrearAdmin = ({ isOpen, onClose, onSuccess }: ModalCrearAdminP
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const password = `PetCare2026-${nombre.trim().replace(/\s+/g, '')}`
+  const nombreLimpio = nombre.trim().replace(/\s+/g, '')
+  const password = `PetCare2026-${nombreLimpio.charAt(0).toUpperCase()}${nombreLimpio.slice(1)}`
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
