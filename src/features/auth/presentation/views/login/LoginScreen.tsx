@@ -4,11 +4,12 @@ import { HeaderComponent } from '@/src/core/components/header/view/header'
 import { useLoginViewModel } from '../../viewmodels/login.viewmodel'
 import { Routes } from '@/src/core/navigator/routes'
 import { Eye, EyeOff, LogIn } from 'lucide-react'
+import { Alert } from '@/src/core/components/ui/Alert'
 import { useState } from 'react'
 import Link from 'next/link'
 
 export const LoginScreen = () => {
-  const { login, isLoading, error } = useLoginViewModel()
+  const { login, isLoading, alert, hideAlert } = useLoginViewModel()
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -21,6 +22,8 @@ export const LoginScreen = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <HeaderComponent />
+
+      <Alert alert={alert} onClose={hideAlert} />
 
       <div className="flex flex-1">
         <div className="flex flex-1 flex-col justify-center px-10 md:px-24 lg:px-36 py-12">
@@ -87,10 +90,6 @@ export const LoginScreen = () => {
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
-
-              {error && (
-                <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
-              )}
 
               <button
                 type="submit"
