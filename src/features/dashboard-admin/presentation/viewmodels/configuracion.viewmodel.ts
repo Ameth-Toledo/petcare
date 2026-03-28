@@ -5,6 +5,8 @@ import { usuarioAdminService } from '../../infrastructure/services/usuario.servi
 import { GetUsuarioUseCase } from '../../domain/usecases/get-usuario.usecase'
 import { UpdatePerfilUseCase } from '../../domain/usecases/update-perfil.usecase'
 import { Usuario } from '../../domain/entities/usuario.entity'
+import { useAlert } from '@/src/core/hooks/useAlert'
+import { getErrorMessage } from '@/src/core/lib/error-messages'
 
 const getUsuarioUseCase = new GetUsuarioUseCase(usuarioAdminService)
 const updatePerfilUseCase = new UpdatePerfilUseCase(usuarioAdminService)
@@ -32,6 +34,8 @@ export const useConfiguracionAdminViewModel = () => {
   const [passwordError, setPasswordError]     = useState<string | null>(null)
   const [passwordOk, setPasswordOk]           = useState(false)
 
+  const { alert, hideAlert, success, error: showError } = useAlert()
+
   const aplicarUsuario = (u: Usuario) => {
     setUsuario(u)
     setNombre(u.nombre ?? '')
@@ -54,7 +58,7 @@ export const useConfiguracionAdminViewModel = () => {
           if (!userLocal) throw apiError
         }
       } catch (e: any) {
-        setError(e.message)
+        setError(getErrorMessage(e))
       } finally {
         setIsLoading(false)
       }
@@ -72,8 +76,9 @@ export const useConfiguracionAdminViewModel = () => {
       localStorage.setItem('user', JSON.stringify(updated))
       setEditando(false)
       setFotoPerfil(undefined)
+      success('¡Perfil actualizado!', 'Tus datos fueron guardados correctamente.')
     } catch (e: any) {
-      setError(e.message)
+      showError('Error al guardar', getErrorMessage(e))
     }
   }
 
@@ -107,9 +112,10 @@ export const useConfiguracionAdminViewModel = () => {
       await usuarioAdminService.changePassword(actual, nueva)
       setPasswordOk(true)
       setActual(''); setNueva(''); setConfirmar('')
+      success('¡Contraseña actualizada!', 'Tu contraseña fue cambiada correctamente.')
       setTimeout(() => { setPasswordOk(false); setAbierto(false) }, 2000)
     } catch (e: any) {
-      setPasswordError(e.response?.data?.message ?? e.message ?? 'Error al cambiar la contraseña.')
+      setPasswordError(getErrorMessage(e))
     } finally {
       setPasswordLoading(false)
     }
@@ -130,5 +136,6 @@ export const useConfiguracionAdminViewModel = () => {
     confirmar, setConfirmar,
     passwordLoading, passwordError, passwordOk,
     handleGuardarPassword,
+    alert, hideAlert,
   }
 }

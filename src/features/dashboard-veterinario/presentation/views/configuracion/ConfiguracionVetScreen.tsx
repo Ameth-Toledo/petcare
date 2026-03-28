@@ -7,6 +7,7 @@ import { PerfilCardVet } from '../../components/PerfilCardVet'
 import { SeguridadAccordionVet } from '../../components/SeguridadAccordionVet'
 import { useConfiguracionViewModelVet } from '../../viewmodels/configuracionvet.viewmodel'
 import { LoaderOne } from "@/src/core/components/ui/loader"
+import { Alert } from '@/src/core/components/ui/Alert'
 
 export const ConfiguracionVetScreen = () => {
   const {
@@ -23,6 +24,7 @@ export const ConfiguracionVetScreen = () => {
     confirmar, setConfirmar,
     passwordLoading, passwordError, passwordOk,
     handleGuardarPassword,
+    alert, hideAlert,
   } = useConfiguracionViewModelVet()
 
   const [showActual, setShowActual]       = useState(false)
@@ -47,6 +49,8 @@ export const ConfiguracionVetScreen = () => {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
+      <Alert alert={alert} onClose={hideAlert} />
+
       <NavBarVetComponent
         title="CONFIGURACIÓN"
         subtitle="Administra tu perfil y preferencias"
@@ -76,13 +80,13 @@ export const ConfiguracionVetScreen = () => {
           </p>
           <SeguridadAccordionVet
             abierto={abierto}
-            onToggle={() => setAbierto(v => !v)}
+            onToggle={() => setAbierto((v: boolean) => !v)}
             actual={actual}       nueva={nueva}       confirmar={confirmar}
             setActual={setActual} setNueva={setNueva} setConfirmar={setConfirmar}
             showActual={showActual}       showNueva={showNueva}       showConfirmar={showConfirmar}
-            toggleActual={() => setShowActual(v => !v)}
-            toggleNueva={() => setShowNueva(v => !v)}
-            toggleConfirmar={() => setShowConfirmar(v => !v)}
+            toggleActual={() => setShowActual((v: boolean) => !v)}
+            toggleNueva={() => setShowNueva((v: boolean) => !v)}
+            toggleConfirmar={() => setShowConfirmar((v: boolean) => !v)}
             onGuardar={handleGuardarPassword}
             passwordLoading={passwordLoading}
             passwordError={passwordError}
