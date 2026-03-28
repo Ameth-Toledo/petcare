@@ -6,23 +6,26 @@ import { CreateCitaRequest } from '../../domain/dtos/request/create-cita.request
 
 export const dashboardClienteService = {
   getCitasRecientes: async (): Promise<Cita[]> => {
+    const user = JSON.parse(localStorage.getItem('user') ?? '{}')
     const { data } = await httpClient.get('/citas/detalle')
     const lista = Array.isArray(data) ? data : data.data ?? []
-    return lista.map((c: any) => ({
-      ...c,
-      id: c.id_cita,
-      fecha: c.fecha_cita,
-      estado: c.estado_cita,
-      nombre_mascota: c.mascota,
-      nombre_dueno: c.dueno?.split(' ')[0] ?? '',
-      apellido_dueno: c.dueno?.split(' ')[1] ?? '',
-      nombre_veterinario: c.veterinario?.split(' ')[0] ?? '',
-      apellido_veterinario: c.veterinario?.split(' ')[1] ?? '',
-      nombre_servicio: c.servicio,
-      precio_servicio: c.precio,
-    }))
+    return lista
+      .filter((c: any) => c.id_user === user.id || c.email_dueno === user.email)
+      .map((c: any) => ({
+        ...c,
+        id: c.id_cita,
+        fecha: c.fecha_cita,
+        estado: c.estado_cita,
+        nombre_mascota: c.mascota,
+        nombre_dueno: c.dueno?.split(' ')[0] ?? '',
+        apellido_dueno: c.dueno?.split(' ')[1] ?? '',
+        nombre_veterinario: c.veterinario?.split(' ')[0] ?? '',
+        apellido_veterinario: c.veterinario?.split(' ')[1] ?? '',
+        nombre_servicio: c.servicio,
+        precio_servicio: c.precio,
+      }))
   },
-
+  
   getMascotasRecientes: async (): Promise<Mascota[]> => {
     const { data } = await httpClient.get('/pets/detalle')
     const lista = Array.isArray(data) ? data : data.data ?? []

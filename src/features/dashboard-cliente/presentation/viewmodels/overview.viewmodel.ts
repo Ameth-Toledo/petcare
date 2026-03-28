@@ -1,4 +1,3 @@
-// presentation/viewmodels/overview.viewmodel.ts
 import { useState, useEffect } from 'react'
 import { dashboardClienteService } from '../../infrastructure/services/dashboard.service'
 import { GetCitasRecientesUseCase } from '../../domain/usecases/get-citas-recientes.usecase'
