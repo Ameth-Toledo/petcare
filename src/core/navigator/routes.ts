@@ -3,7 +3,8 @@ export const Routes = {
   auth: {
     login: '/login',
     register: '/register',
-    forgotPassword: '/forgot-password',
+    forgotPassword: '/auth/forgot-password',
+    resetPassword: '/auth/reset-password',
     callback: '/auth/callback',
   },
   dashboard: {

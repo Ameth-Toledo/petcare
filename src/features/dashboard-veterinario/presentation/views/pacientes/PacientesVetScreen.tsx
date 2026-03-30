@@ -148,7 +148,7 @@ export const PacientesVetScreen = () => {
             <img
               src="/resources/overview-user.webp"
               alt="Overview"
-              style={{ width: '24rem' }}
+              style={{ width: '22rem' }}
               className="absolute bottom-0 left-1/2 -translate-x-1/2 object-contain"
             />
           </div>
