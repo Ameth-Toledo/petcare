@@ -27,7 +27,8 @@ export const dashboardClienteService = {
   },
   
   getMascotasRecientes: async (): Promise<Mascota[]> => {
-    const { data } = await httpClient.get('/pets/detalle')
+    const user = JSON.parse(localStorage.getItem('user') ?? '{}')
+    const { data } = await httpClient.get(`/pets/user/${user.id}`)
     const lista = Array.isArray(data) ? data : data.data ?? []
     return lista.map((m: any) => ({ ...m, id: m.id_mascota ?? m.id }))
   },
