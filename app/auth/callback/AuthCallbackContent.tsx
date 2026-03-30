@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Routes } from '@/src/core/navigator/routes'
 import { Role } from '@/src/features/auth/domain/entities/role.entity'
 import { LoaderOne } from '@/src/core/components/ui/loader'
+import Cookies from 'js-cookie'
 
 export const AuthCallbackContent = () => {
   const router = useRouter()
@@ -30,6 +31,7 @@ export const AuthCallbackContent = () => {
 
       localStorage.setItem('token', token)
       localStorage.setItem('user', JSON.stringify(user))
+      Cookies.set('token', token, { expires: 7 })
 
       switch (payload.rol) {
         case Role.ADMIN:

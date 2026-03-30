@@ -6,6 +6,7 @@ import { Routes } from '@/src/core/navigator/routes'
 import { Role } from '../../domain/entities/role.entity'
 import { useAlert } from '@/src/core/hooks/useAlert'
 import { getErrorMessage } from '@/src/core/lib/error-messages'
+import Cookies from 'js-cookie'
 
 export const useLoginViewModel = () => {
   const router = useRouter()
@@ -16,6 +17,9 @@ export const useLoginViewModel = () => {
     try {
       setIsLoading(true)
       const response = await authContainer.loginUseCase.execute(credentials)
+      localStorage.setItem('token', response.token)
+      localStorage.setItem('user', JSON.stringify(response.user))
+      Cookies.set('token', response.token, { expires: 7 })
       success('¡Bienvenido!', `Hola ${response.user.nombre}, iniciaste sesión correctamente.`)
       setTimeout(() => {
         switch (response.user.rol) {
